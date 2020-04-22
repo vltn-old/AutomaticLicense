@@ -3,7 +3,7 @@ from github import Github;
 
 def getGithubLogin(arguments):
     try:
-        file = open(arguments[0][:-len("Git push/gitPush.py")] + "githubLogin.txt", "r");
+        file = open(arguments[0][:-len("Create License/createLicense.py")] + "githubLogin.txt", "r");
         fileData = file.readlines();
 
         return fileData;
@@ -18,7 +18,49 @@ def getGithubLogin(arguments):
 
 
 def createLicense(arguments):
-    
+    try:
+        licenseType = arguments[2];
+        path = arguments[1];
+
+        try:
+            file = open(arguments[0][:-len("Create License/createLicense.py")] + "Licenses/" + licenseType + ".txt", "r");
+            fileData = file.read();
+            file.close;
+
+            print('Creating LICENSE file');
+            file = open(path + "/LICENSE", "a+");
+            print('test1');
+            file.write(fileData);
+            print('tets2')
+            file.close();
+
+            print();
+
+            email = getGithubLogin(arguments)[0][:-len("\n")];
+            mdp = getGithubLogin(arguments)[1][:-len("\n")];
+
+            if email == "False" or mdp == "False":
+                return False;
+
+            print('Going to ' + path);
+            os.chdir(path);
+
+            print();
+
+            print('Configurating user identification to github for the project.');
+            os.system('git config user.email "' + email + '"');
+
+            print();
+
+            print('Do commit');
+            os.system('git add .');
+            os.system('git commit -m "Create LICENSE"');
+            os.system('git push -u origin master');
+
+        except:
+            print("This LICENSE does not exist. Make sure that you have created '" + licenseType + ".txt' file in the correct folder");
+    except:
+        print("!!! You miss to refer the LICENSE type. For example MIT");
 
 
 def setLoginInfos(arguments):
@@ -30,7 +72,7 @@ def setLoginInfos(arguments):
     print("What is your github account password ?");
     password = input();
 
-    file = open(arguments[0][:-len("Git push/gitPush.py")] + "githubLogin.txt","a+");
+    file = open(arguments[0][:-len("Create License/createLicense.py")] + "githubLogin.txt","a+");
     file.write(email + "\n");
     file.write(password + "\n");
     file.close();
